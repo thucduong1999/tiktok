@@ -46,7 +46,7 @@
     }
     &::after {
         position: absolute;
-        content: "";
+        content: '';
         top: calc(var(--search-top-spacer) / 2);
         right: var(--search-button-width);
         height: calc(var(--search-height) - var(--search-top-spacer));
@@ -90,3 +90,11 @@
         background-color: rgba(22, 24, 35, 0.06);
     }
 }
+
+.more-btn {
+    font-size: 2rem;
+    margin-left: 28px;
+    padding: 4px 8px;
+    background: transparent;
+}
+
