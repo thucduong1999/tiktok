@@ -5,9 +5,11 @@ import { useState, useEffect } from 'react'
 
 //fonts
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCircleXmark, faSpinner, faMagnifyingGlass, faEllipsisVertical, faEarthAsia, faCircleQuestion, faKeyboard } from '@fortawesome/free-solid-svg-icons'
+import { faCircleXmark, faSpinner, faMagnifyingGlass, faEllipsisVertical, faEarthAsia, faCircleQuestion, faKeyboard, faCloudUpload, faMessage, faUser, faCoins, faGear, faSignOut } from '@fortawesome/free-solid-svg-icons'
 
-import Tippy from '@tippyjs/react/headless'
+import HeadlessTippy from '@tippyjs/react/headless'
+import Tippy from '@tippyjs/react'
+import 'tippy.js/dist/tippy.css'
 import { Wrapper as PopperWrapper } from '~/components/Popper'
 import AccountItem from '~/components/AccountItem'
 import Button from '~/components/Button'
@@ -47,8 +49,36 @@ const MENU_ITEMS = [
     },
 ]
 
+const userMenu = [
+    {
+        icon: <FontAwesomeIcon icon={faUser} />,
+        title: 'View Profile',
+        to: '/@duongnt'
+    },
+    {
+        icon: <FontAwesomeIcon icon={faCoins} />,
+        title: 'Get Coins',
+        to: '/coin'
+    },
+    {
+        icon: <FontAwesomeIcon icon={faGear} />,
+        title: 'Settings',
+        to: '/settings'
+    },
+    ...MENU_ITEMS,
+    {
+        icon: <FontAwesomeIcon icon={faSignOut} />,
+        title: 'Log Out',
+        to: '/logout',
+        separate: true
+    }
+]
+
 function Header() {
     const [searchResult, setSearchResult] = useState([]);
+
+    const currentUser = true
+
 
     useEffect(() => {
         setTimeout(() => {
@@ -64,11 +94,12 @@ function Header() {
         }
     }
 
+
     return <header className={cx('wrapper')}>
         <div className={cx('inner')}>
             <img src={images.logo} alt="TikTok  " />
 
-            <Tippy
+            <HeadlessTippy
                 interactive
                 visible={searchResult.length > 0}
                 render={attrs => (
@@ -96,20 +127,45 @@ function Header() {
                         <FontAwesomeIcon icon={faMagnifyingGlass} />
                     </button>
                 </div>
-            </Tippy>
+            </HeadlessTippy>
+
             <div className={cx('actions')}>
-                <Button text>Upload</Button>
-                <Button primary >Log in</Button>
+                {currentUser ? (
+                    <>
+                        <Tippy delay={[0, 200]} content="Upload Video" placement='bottom'>
+                            <button className={cx('actions-btn')}>
+                                <FontAwesomeIcon icon={faCloudUpload} />
+                            </button>
+                        </Tippy>
+                        <Tippy delay={[0, 200]} content='Messages' placement='bottom'>
+                            <button className={cx('actions-btn')}>
+                                <FontAwesomeIcon icon={faMessage} />
+                            </button>
+                        </Tippy>
+                    </>
+                ) : (
+                    <>
+                        <Button text>Upload</Button>
+                        <Button primary >Log in</Button>
+                    </>
+                )}
 
                 <Menu
-                    items={MENU_ITEMS}
+                    items={currentUser ? userMenu : MENU_ITEMS}
                     onChange={handleMenuChange}
                 >
-                    <button className={cx('more-btn')}>
-                        <FontAwesomeIcon icon={faEllipsisVertical} />
-                    </button>
+                    {currentUser ? (
+                        <img
+                            className={cx('user-avatar')}
+                            src={images.avatar}
+                            alt="Nguyễn Thực Đương"
+                        />
+                    ) : (
+                        <button className={cx('more-btn')}>
+                            <FontAwesomeIcon icon={faEllipsisVertical} />
+                        </button>
+                    )}
                 </Menu>
-
             </div>
         </div>
     </header>
